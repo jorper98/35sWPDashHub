@@ -1,0 +1,26 @@
+{
+    "name": "s35-wp-hub/dashboard",
+    "description": "s35-wp-hub: self-hosted PHP dashboard for managing multiple WordPress sites via REST API and Application Passwords",
+    "type": "project",
+    "license": "MIT",
+    "require": {
+        "php": ">=8.1"
+    },
+    "suggest": {
+        "ext-zip": "Needed for composer dashboard-zip (build-dashboard-zip.php)"
+    },
+    "autoload": {
+        "psr-4": {
+            "S35WpHub\\": "src/"
+        }
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "scripts": {
+        "plugin-zip": "@php scripts/build-plugin-zip.php",
+        "plugin-zip:ps": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/build-plugin-zip.ps1",
+        "dashboard-zip": "@php scripts/build-dashboard-zip.php",
+        "dashboard-zip:ps": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/build-dashboard-zip.ps1"
+    }
+}

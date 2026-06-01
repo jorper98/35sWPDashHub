@@ -1,0 +1,8 @@
+{
+  "version": "0.0.2",
+  "package": "https://YOUR-HUB-DOMAIN/public/plugin-update/s35-wp-hub.zip",
+  "url": "https://github.com/YOUR_ORG/s35-wp-hub",
+  "tested": "6.7",
+  "requires": "6.0",
+  "requires_php": "7.4"
+}
