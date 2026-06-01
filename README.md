@@ -291,3 +291,9 @@ The **Community Edition** is distributed under the **MIT License**. See `LICENSE
 **Company:** [35sites.com](https://35sites.com)
 
 **Project Link:** [https://github.com/jorper98/35sWPDashHub](https://github.com/jorper98/35sWPDashHub)
+
+---
+
+## 🤖 Artificial Intelligence Use Disclaimer
+
+Portions of this project were developed with the assistance of AI models (including code generation, documentation, and structural planning). All AI-generated output has been reviewed, tested, and integrated by the author to ensure quality, security, and functionality.
