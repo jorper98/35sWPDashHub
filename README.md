@@ -289,3 +289,5 @@ The **Community Edition** is distributed under the **MIT License**. See `LICENSE
 
 **Jorge Pereira** - [@jorper98](https://twitter.com/jorper98)  
 **Company:** [35sites.com](https://35sites.com)
+
+**Project Link:** [https://github.com/jorper98/35sWPDashHub](https://github.com/jorper98/35sWPDashHub)
