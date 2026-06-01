@@ -20,7 +20,7 @@ use S35WpHub\View;
 <p class="muted">Upload WordPress plugin zips and deploy them to sites over HTTPS. Each site’s companion must allow your hub host (see <code>S35_WP_HUB_ALLOWED_PACKAGE_HOSTS</code> or <code>S35_WP_HUB_UPDATE_MANIFEST_URL</code> in <code>wp-config.php</code>).</p>
 
 <section class="card-like" style="margin-bottom: 1.5rem;">
-    <h2>35sDash Companion (plugin/s35-wp-hub)</h2>
+    <h2>35sDashHub Companion (plugin/s35-wp-hub)</h2>
     <p class="muted small">Version in <code>plugin/s35-wp-hub</code> is exposed at:</p>
     <p><code><?= View::e($companion_manifest_url) ?></code></p>
     <p class="muted small">Package URL (rebuild zip after changing source so it matches the manifest version):</p>

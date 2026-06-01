@@ -1,4 +1,4 @@
-# 35sDash — WordPress Sites Dashboard
+# 35sDashHub — WordPress Sites Dashboard Hub Manager by 35sites.com
 
 Self-hosted **vanilla PHP** dashboard to monitor and update multiple **WordPress** sites using **Application Passwords** and the **REST API**. Manage your entire WordPress fleet from a single interface — sync site status, deploy plugin/theme/core updates, fleet-manage plugins, capture update snapshots, and send owner email reports.
 
@@ -161,7 +161,7 @@ Must-use plugins cannot be deactivated from the Plugins screen; remove or edit t
 
 ## Updating the companion plugin from your hub (optional)
 
-WordPress can offer a normal **Plugins → update** flow for the **35sDash Companion** (`plugin/s35-wp-hub`) when each site knows where to read release metadata. The **version** is read from your repo's `plugin/s35-wp-hub/s35-wp-hub.php` (`S35_WP_HUB_VERSION`); the **package** URL is built from `base_url` in `config/config.php`.
+WordPress can offer a normal **Plugins → update** flow for the **35sDashHub Companion** (`plugin/s35-wp-hub`) when each site knows where to read release metadata. The **version** is read from your repo's `plugin/s35-wp-hub/s35-wp-hub.php` (`S35_WP_HUB_VERSION`); the **package** URL is built from `base_url` in `config/config.php`.
 
 ### Recommended: dynamic manifest (`manifest.php`)
 

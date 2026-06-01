@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin Name:       35sDash Companion
+ * Plugin Name:       35sDashHub Companion
  * Plugin URI:        https://35sites.com/wordpress-plugins/
  * Description:       Centralized Wordpress Sites dashboard / Manager
  * Version:           0.0.26

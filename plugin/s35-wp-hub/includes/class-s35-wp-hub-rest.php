@@ -219,7 +219,7 @@ final class S35_Wp_Hub_Rest
         if ($plugin_file === $self_basename) {
             return new WP_Error(
                 'cannot_delete_companion',
-                __('Cannot delete the 35sDash Companion plugin from the dashboard.', 's35-wp-hub'),
+                __('Cannot delete the 35sDashHub Companion plugin from the dashboard.', 's35-wp-hub'),
                 ['status' => 400]
             );
         }
@@ -286,7 +286,7 @@ final class S35_Wp_Hub_Rest
         if ($plugin_file === $self_basename) {
             return new WP_Error(
                 'cannot_deactivate_companion',
-                __('Cannot deactivate the 35sDash Companion plugin from the dashboard.', 's35-wp-hub'),
+                __('Cannot deactivate the 35sDashHub Companion plugin from the dashboard.', 's35-wp-hub'),
                 ['status' => 400]
             );
         }

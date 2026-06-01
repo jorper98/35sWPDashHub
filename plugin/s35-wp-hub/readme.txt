@@ -1,4 +1,4 @@
-=== 35sDash Companion ===
+=== 35sDashHub Companion ===
 Contributors: 35sites
 Tags: rest-api, updates, maintenance, agency
 Requires at least: 6.0
@@ -7,7 +7,7 @@ Requires PHP: 7.4
 Stable tag: 0.0.26
 License: MIT
 
-REST endpoints used by the self-hosted 35sDash (WordPress Sites Dashboard) PHP app (Application Passwords). Learn more: https://35sites.com/wordpress-plugins/
+REST endpoints used by the self-hosted 35sDashHub (WordPress Sites Dashboard Hub Manager) PHP app (Application Passwords). Learn more: https://35sites.com/wordpress-plugins/
 
 == Description ==
 
@@ -28,7 +28,7 @@ Future (not in v0.0.1): one-click admin login (SSO) via a short-lived token vali
 1. Upload the `s35-wp-hub` folder to `/wp-content/plugins/`.
 2. Activate the plugin.
 3. Create an Application Password for an administrator on Users → Profile.
-4. Configure the site in your 35sDash dashboard.
+4. Configure the site in your 35sDashHub dashboard.
 
 == Optional IP allowlist ==
 
@@ -40,7 +40,7 @@ Comma-separated list. When empty, all IPs are allowed (still protected by Applic
 
 == Optional updates from your hub ==
 
-Define a manifest URL so WordPress can show an update when you publish a newer zip on your 35sDash hub server:
+Define a manifest URL so WordPress can show an update when you publish a newer zip on your 35sDashHub server:
 
 `define('S35_WP_HUB_UPDATE_MANIFEST_URL', 'https://your-hub.example.com/public/plugin-update/manifest.json');`
 

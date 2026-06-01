@@ -35,7 +35,7 @@ final class OwnerReportService
             }
             $lines[] = '';
         }
-        $lines[] = 'Site report from ' . $agencyName . ' (35sDash). Generated ' . gmdate('Y-m-d H:i') . ' UTC.';
+        $lines[] = 'Site report from ' . $agencyName . ' (35sDashHub). Generated ' . gmdate('Y-m-d H:i') . ' UTC.';
         $lines[] = 'Your renewal date on file: ' . ($owner->renewalDate !== '' ? $owner->renewalDate : '—');
         $lines[] = '';
 
@@ -182,7 +182,7 @@ final class OwnerReportService
         $raw = Config::get('report_mail_signature');
         $sig = is_string($raw) ? trim($raw) : '';
         if ($sig === '') {
-            return ['—', '35sDash'];
+            return ['—', '35sDashHub'];
         }
         $lines = ['—', ''];
         foreach (preg_split("/\r\n|\n|\r/", $sig) as $line) {
