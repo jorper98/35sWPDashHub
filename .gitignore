@@ -1,16 +1,18 @@
+.env
+.idea/
+.vscode/
+.kilo/
+Sync_logic.txt
+deploy.bat
+sync-to-public.bat
+UpdatingSite.md
+*.log
 /vendor/
 /config/config.php
 /storage/*.sqlite
 /storage/*.sqlite-journal
 PRDv01.md
 
-.env
-.idea/
-.vscode/
-Sync_logic.txt
-deploy.bat
-UpdatingSite.md
-*.log
 /public/plugin-update/manifest.json
 /public/plugin-update/.last-packaged-version
 /public/plugin-update/*.zip
