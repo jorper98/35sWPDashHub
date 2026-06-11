@@ -5,10 +5,13 @@
 Sync_logic.txt
 deploy.bat
 sync-to-public.bat
+sync-to-public.ps1
+
 UpdatingSite.md
 *.log
 /vendor/
 /config/config.php
+/exported_sites.php
 /storage/*.sqlite
 /storage/*.sqlite-journal
 PRDv01.md
@@ -20,3 +23,10 @@ PRDv01.md
 
 /dist/
 sync.ffs_db
+
+*.tmp
+~*
+
+# Internal admin scripts
+export_sites.php
+check_plugins.php

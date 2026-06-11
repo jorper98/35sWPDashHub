@@ -44,6 +44,7 @@ $hubUpdateAllTitle = $sites === []
     <a href="index.php" class="hub-site-tab<?= $sites_tab === 'sites' ? ' hub-site-tab--active' : '' ?>">Sites</a>
     <a href="index.php?tab=plugins" class="hub-site-tab<?= $sites_tab === 'plugins' ? ' hub-site-tab--active' : '' ?>">Plugins</a>
     <a href="index.php?tab=compare" class="hub-site-tab<?= $sites_tab === 'compare' ? ' hub-site-tab--active' : '' ?>">Compare</a>
+    <a href="index.php?tab=inactive_plugins" class="hub-site-tab<?= $sites_tab === 'inactive_plugins' ? ' hub-site-tab--active' : '' ?>">Inactive Plugins</a>
     <a href="index.php?tab=activity" class="hub-site-tab<?= $sites_tab === 'activity' ? ' hub-site-tab--active' : '' ?>">Activity log</a>
 </nav>
 
@@ -376,6 +377,30 @@ $hubUpdateAllTitle = $sites === []
 </table>
 <?php endif; ?>
 
+<?php elseif ($sites_tab === 'inactive_plugins') : ?>
+<section class="inactive-plugins-section">
+    <h2>Live Inactive Plugin Report</h2>
+    <p class="muted small">Connects to each site via the WordPress REST API to check for inactive plugins in real-time.</p>
+    
+    <div style="margin-bottom: 20px;">
+        <button type="button" class="btn primary" id="hub-check-inactive-plugins-btn">Run Live Check</button>
+    </div>
+
+    <div id="hub-inactive-plugins-report" style="display: none;">
+        <p id="hub-inactive-plugins-timestamp" class="muted small" style="margin-bottom: 10px; display: none;"></p>
+        <table class="grid" id="hub-inactive-plugins-table">
+            <thead>
+                <tr>
+                    <th style="width: 40%;">Site</th>
+                    <th style="width: 60%;">Report Results</th>
+                </tr>
+            </thead>
+            <tbody id="hub-inactive-plugins-tbody">
+                <!-- Results will be injected here -->
+            </tbody>
+        </table>
+    </div>
+</section>
 <?php elseif ($sites_tab === 'activity') : ?>
 
 <section class="activity-section">
@@ -859,3 +884,71 @@ $hubUpdateAllTitle = $sites === []
 <?php if ($sites_tab === 'plugins' && $sites !== [] && $fleet_plugins !== []) : ?>
 <script src="assets/sites-plugins-tab.js" defer></script>
 <?php endif; ?>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const checkBtn = document.getElementById('hub-check-inactive-plugins-btn');
+    const reportDiv = document.getElementById('hub-inactive-plugins-report');
+    const timestampEl = document.getElementById('hub-inactive-plugins-timestamp');
+    const tbody = document.getElementById('hub-inactive-plugins-tbody');
+
+    if (checkBtn) {
+        checkBtn.addEventListener('click', function() {
+            checkBtn.disabled = true;
+            checkBtn.textContent = 'Checking...';
+            reportDiv.style.display = 'block';
+            tbody.innerHTML = '<tr><td colspan="2" style="text-align:center;">Checking sites...</td></tr>';
+
+            const formData = new FormData();
+            formData.append('action', 'check_inactive_plugins');
+            formData.append('csrf', document.querySelector('meta[name="csrf"]')?.content || document.body.dataset.csrf || '');
+            formData.append('ajax', '1');
+
+            fetch('index.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                const now = new Date();
+                timestampEl.textContent = 'Report generated: ' + now.toLocaleString();
+                timestampEl.style.display = 'block';
+                tbody.innerHTML = '';
+                if (data.ok && data.results) {
+                    data.results.forEach(result => {
+                        const tr = document.createElement('tr');
+                        let statusHtml = '';
+                        if (result.status === 'ok') {
+                            statusHtml = `<span style="color: #27ae60; font-weight: bold;">✅ ${result.message}</span>`;
+                        } else if (result.status === 'warning') {
+                            let listHtml = '';
+                            if (result.inactive && result.inactive.length > 0) {
+                                listHtml = '<ul style="margin: 5px 0 0 20px; padding: 0; font-size: 0.9em; color: #555;">' + 
+                                    result.inactive.map(p => `<li>${p}</li>`).join('') + '</ul>';
+                            }
+                            statusHtml = `<span style="color: #f39c12; font-weight: bold;">⚠️ ${result.message}</span>${listHtml}`;
+                        } else {
+                            statusHtml = `<span style="color: #e74c3c; font-weight: bold;">❌ ${result.message}</span>`;
+                        }
+                        
+                        tr.innerHTML = `
+                            <td>${result.site_label}<br><small class="muted">${result.site_url}</small></td>
+                            <td>${statusHtml}</td>
+                        `;
+                        tbody.appendChild(tr);
+                    });
+                } else {
+                    tbody.innerHTML = `<tr><td colspan="2" style="text-align:center; color: #e74c3c;">Error: ${data.error || 'Unknown error'}</td></tr>`;
+                }
+            })
+            .catch(error => {
+                tbody.innerHTML = `<tr><td colspan="2" style="text-align:center; color: #e74c3c;">Network error: ${error.message}</td></tr>`;
+            })
+            .finally(() => {
+                checkBtn.disabled = false;
+                checkBtn.textContent = 'Run Live Check';
+            });
+        });
+    }
+});
+</script>

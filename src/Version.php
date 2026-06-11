@@ -6,7 +6,7 @@ namespace S35WpHub;
 
 final class Version
 {
-    public const VERSION = '0.0.19';
+    public const VERSION = '0.0.20';
 
     /** Shown in the dashboard UI (browser title, header). */
     public const APP_DISPLAY_NAME = '35sDashHub — WordPress Sites Dashboard Hub Manager by 35sites.com';

@@ -297,7 +297,7 @@ final class Application
 
         $list = $this->sites->all();
         $sitesTab = strtolower(trim((string) ($_GET['tab'] ?? '')));
-        if (! in_array($sitesTab, ['plugins', 'compare', 'activity'], true)) {
+        if (! in_array($sitesTab, ['plugins', 'compare', 'inactive_plugins', 'activity'], true)) {
             $sitesTab = 'sites';
         }
 
@@ -715,6 +715,7 @@ final class Application
             'capture_update_snapshot' => $this->postCaptureUpdateSnapshot(),
             'delete_snapshot' => $this->postDeleteSnapshot(),
             'delete_snapshots' => $this->postDeleteSnapshots(),
+            'check_inactive_plugins' => $this->postCheckInactivePlugins(),
             default => $this->redirect('index.php'),
         };
     }
@@ -1808,5 +1809,114 @@ final class Application
 
         $this->flash('success', sprintf('%d snapshot(s) deleted.', $deleted));
         $this->redirect('index.php?tab=compare');
+    }
+
+    private function postCheckInactivePlugins(): void
+    {
+        $this->assertCsrf();
+        if (! $this->wantsAjax()) {
+            $this->jsonResponse(['ok' => false, 'error' => 'AJAX only.'], 400);
+        }
+
+        $sites = $this->sites->all();
+        $results = [];
+
+        foreach ($sites as $site) {
+            $row = $this->sites->findWithSecret((int) $site->id);
+            if ($row === null) {
+                continue;
+            }
+
+            try {
+                $plain = $this->crypto->decrypt($row['app_password_encrypted']);
+            } catch (\Throwable) {
+                $results[] = [
+                    'site_id' => $site->id,
+                    'site_label' => $site->label ?? $site->siteUrl,
+                    'site_url' => $site->siteUrl,
+                    'status' => 'error',
+                    'message' => 'Could not decrypt password.',
+                ];
+                continue;
+            }
+
+            if ($plain === '') {
+                $results[] = [
+                    'site_id' => $site->id,
+                    'site_label' => $site->label ?? $site->siteUrl,
+                    'site_url' => $site->siteUrl,
+                    'status' => 'error',
+                    'message' => 'No application password stored.',
+                ];
+                continue;
+            }
+
+            $baseUrl = rtrim($site->siteUrl, '/');
+            $apiUrl = $baseUrl . '/wp-json/wp/v2/plugins';
+            
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $apiUrl);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+            curl_setopt($ch, CURLOPT_USERPWD, $site->adminUser . ':' . $plain);
+            curl_setopt($ch, CURLOPT_USERAGENT, 'WP Plugin Auditor');
+            curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+            
+            $response = curl_exec($ch);
+            $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            curl_close($ch);
+
+            if ($httpCode !== 200) {
+                $results[] = [
+                    'site_id' => $site->id,
+                    'site_label' => $site->label ?? $site->siteUrl,
+                    'site_url' => $site->siteUrl,
+                    'status' => 'error',
+                    'message' => "HTTP {$httpCode}",
+                ];
+                continue;
+            }
+
+            $plugins = json_decode($response, true);
+            if (empty($plugins) || !is_array($plugins)) {
+                $results[] = [
+                    'site_id' => $site->id,
+                    'site_label' => $site->label ?? $site->siteUrl,
+                    'site_url' => $site->siteUrl,
+                    'status' => 'warning',
+                    'message' => 'No plugin data returned or REST API restricted.',
+                ];
+                continue;
+            }
+
+            $inactivePlugins = [];
+            foreach ($plugins as $plugin) {
+                if ($plugin['status'] === 'inactive') {
+                    $inactivePlugins[] = $plugin['name'] . " (v" . $plugin['version'] . ")";
+                }
+            }
+
+            if (empty($inactivePlugins)) {
+                $results[] = [
+                    'site_id' => $site->id,
+                    'site_label' => $site->label ?? $site->siteUrl,
+                    'site_url' => $site->siteUrl,
+                    'status' => 'ok',
+                    'message' => 'All plugins are active.',
+                    'inactive' => [],
+                ];
+            } else {
+                $results[] = [
+                    'site_id' => $site->id,
+                    'site_label' => $site->label ?? $site->siteUrl,
+                    'site_url' => $site->siteUrl,
+                    'status' => 'warning',
+                    'message' => 'Inactive plugins found.',
+                    'inactive' => $inactivePlugins,
+                ];
+            }
+        }
+
+        $this->jsonResponse(['ok' => true, 'results' => $results]);
     }
 }

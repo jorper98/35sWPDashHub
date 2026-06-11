@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+require_once __DIR__ . '/../vendor/autoload.php';
+
 use S35WpHub\Config;
 use S35WpHub\Database;
 
