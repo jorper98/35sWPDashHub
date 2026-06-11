@@ -2,7 +2,7 @@
 
 Self-hosted **vanilla PHP** dashboard to monitor and update multiple **WordPress** sites using **Application Passwords** and the **REST API**. Manage your entire WordPress fleet from a single interface — sync site status, deploy plugin/theme/core updates, fleet-manage plugins, capture update snapshots, and send owner email reports.
 
-**Latest:** v0.0.20 — fixes stale plugin active/inactive status when activating an already-active plugin. See [CHANGELOG.md](CHANGELOG.md) for full release history.
+**Latest:** v0.0.21 — fixes stale plugin active/inactive status when activating an already-active plugin. See [CHANGELOG.md](CHANGELOG.md) for full release history.
 
 **Changelog:** [CHANGELOG.md](CHANGELOG.md) (project-wide). Companion-only WordPress notes: [plugin/s35-wp-hub/readme.txt](plugin/s35-wp-hub/readme.txt) → *Changelog*.
 

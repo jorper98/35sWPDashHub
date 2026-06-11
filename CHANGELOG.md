@@ -2,7 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
-## [0.0.20] - 2026-06-10
+## [0.0.21] 
+### Fixed
+- Resolved an issue where the dashboard snapshot would incorrectly report a plugin as inactive after an 'Activate' action if the plugin was already active on the remote site.
+- Replaced raw $wpdb active plugin queries in the companion plugin sync with WordPress core's native is_plugin_active() function (post-cache-flush) to guarantee the snapshot perfectly matches the remote site's actual state.
+
+## [0.0.20] 
 ### Added
 - Integrated live inactive plugin check directly into the admin UI (Plugins tab).
 - Added dynamic AJAX reporting for plugin status across all sites.

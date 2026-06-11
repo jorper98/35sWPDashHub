@@ -3,7 +3,7 @@
  * Plugin Name:       35sDashHub Companion
  * Plugin URI:        https://35sites.com/wordpress-plugins/
  * Description:       Centralized Wordpress Sites dashboard / Manager
- * Version:           0.0.26
+ * Version:           0.0.27
  * Requires at least: 6.0
  * Requires PHP:      7.4
  * Author:            35sites.com
@@ -19,7 +19,7 @@ if (! defined('ABSPATH')) {
 }
 
 define('S35_WP_HUB_FILE', __FILE__);
-define('S35_WP_HUB_VERSION', '0.0.26');
+define('S35_WP_HUB_VERSION', '0.0.27');
 
 /**
  * Optional hardening: comma-separated allowed IPv4/IPv6 addresses for REST requests to this plugin.

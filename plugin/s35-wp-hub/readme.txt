@@ -4,7 +4,7 @@ Tags: rest-api, updates, maintenance, agency
 Requires at least: 6.0
 Tested up to: 6.7
 Requires PHP: 7.4
-Stable tag: 0.0.26
+Stable tag: 0.0.27
 License: MIT
 
 REST endpoints used by the self-hosted 35sDashHub (WordPress Sites Dashboard Hub Manager) PHP app (Application Passwords). Learn more: https://35sites.com/wordpress-plugins/
@@ -47,6 +47,9 @@ Define a manifest URL so WordPress can show an update when you publish a newer z
 The manifest is JSON (`version`, `package` zip URL, optional `tested`, `requires`, `requires_php`). See the main project README. You can also use the `s35_wp_hub_update_manifest_url` filter.
 
 == Changelog ==
+
+= 0.0.27 =
+* Fixed active plugin status reporting to use WordPress core's native is_plugin_active() after cache flush, guaranteeing the dashboard snapshot perfectly matches the remote site's actual state.
 
 = 0.0.26 =
 * Summary endpoint `installed_plugins`: bypass `is_plugin_active()` and read `active_plugins` / `active_sitewide_plugins` directly from `$wpdb` after cache flush, fixing stale status when object cache layers (Redis, Memcached) serve outdated data. Added `wp_cache_flush_runtime()` for WordPress 6.0+.

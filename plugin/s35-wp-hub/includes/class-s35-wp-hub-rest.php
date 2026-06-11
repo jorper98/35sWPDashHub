@@ -581,31 +581,13 @@ final class S35_Wp_Hub_Rest
             wp_cache_flush_runtime();
         }
 
-        // Read active_plugins directly from the database to guarantee fresh status
-        // regardless of any persistent object cache layer (Redis, Memcached, etc.).
-        global $wpdb;
-        $db_active_plugins = [];
-        $raw_active = $wpdb->get_var("SELECT option_value FROM $wpdb->options WHERE option_name = 'active_plugins'");
-        if (is_string($raw_active)) {
-            $db_active_plugins = maybe_unserialize($raw_active);
-            if (! is_array($db_active_plugins)) {
-                $db_active_plugins = [];
-            }
-        }
+        // After flushing the cache, get_option/get_site_option will fetch fresh from the database.
+        // This is more robust than raw $wpdb queries because it respects WordPress core filters
+        // (e.g., 'option_active_plugins') and handles unserialization edge cases natively.
+        $db_active_plugins = (array) get_option('active_plugins', []);
         $db_sitewide_plugins = [];
         if (is_multisite()) {
-            $raw_sitewide = $wpdb->get_var(
-                $wpdb->prepare(
-                    "SELECT meta_value FROM $wpdb->sitemeta WHERE meta_key = 'active_sitewide_plugins' AND site_id = %d",
-                    get_current_network_id()
-                )
-            );
-            if (is_string($raw_sitewide)) {
-                $db_sitewide_plugins = maybe_unserialize($raw_sitewide);
-                if (! is_array($db_sitewide_plugins)) {
-                    $db_sitewide_plugins = [];
-                }
-            }
+            $db_sitewide_plugins = (array) get_site_option('active_sitewide_plugins', []);
         }
 
         $installed_plugins = [];
@@ -630,9 +612,11 @@ final class S35_Wp_Hub_Rest
                 $pauthor_uri = isset($plugin_data['AuthorURI']) && is_string($plugin_data['AuthorURI'])
                     ? trim($plugin_data['AuthorURI'])
                     : '';
-                // Bypass is_plugin_active() to avoid stale object-cache results;
-                // check directly against the database-sourced arrays.
-                $is_active = in_array($plugin_file, $db_active_plugins, true) || isset($db_sitewide_plugins[$plugin_file]);
+                
+                // Use WordPress core's native function. Since we just flushed the cache, 
+                // this guarantees a fresh, accurate read that perfectly matches the remote activation logic.
+                $is_active = is_plugin_active($plugin_file);
+                
                 $installed_plugins[] = [
                     'file' => $plugin_file,
                     'name' => $pname,
